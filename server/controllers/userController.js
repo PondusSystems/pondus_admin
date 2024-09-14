@@ -1,52 +1,65 @@
 const userService = require('../services/userService');
 
-const Register = async (req, res) => {
+const Login = async (req, res, next) => {
   try {
-    const DTO = { ...req.body };
-    const user = await userService.registerUser(DTO);
-    res.status(201).json({ user });
+    const data = { ...req.body };
+    const { accessToken, refreshToken } = await userService.loginUser(data);
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict'
+    });
+    res.status(200).json({ token: accessToken });
   } catch (error) {
-    if (error.message === 'A user with that email has already been registered!') {
-      res.status(409).send(error.message);
-    } else {
-      res.status(500).send('Internal Server Error');
-    }
+    next(error);
   }
 };
 
-const Login = async (req, res) => {
+const RefreshToken = async (req, res, next) => {
   try {
-    const DTO = { ...req.body };
-    const token = await userService.loginUser(DTO);
-    res.status(200).json({ token });
+    const refreshToken = req.cookies?.refreshToken;
+    const { newAccessToken, newRefreshToken } = await userService.refreshToken(refreshToken);
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict'
+    });
+    res.status(200).json({ token: newAccessToken });
   } catch (error) {
-    if (error.message === 'User not found') {
-      res.status(404).send(error.message);
-    } else if (error.message === 'Unauthorized') {
-      res.status(401).send(error.message);
-    } else {
-      res.status(500).send('Internal Server Error');
-    }
+    next(error);
   }
 };
 
-const UpdateUser = async (req, res) => {
+const Logout = async (req, res, next) => {
   try {
-    const userId = res.locals.payload.id;
-    const DTO = { ...req.body };
-    await userService.updateUser(userId, DTO);
-    res.status(204).send('User info updated successfully');
-  } catch (error) {
-    if (error.message === 'Unable to update info') {
-      res.status(400).send(error.message);
-    } else {
-      res.status(500).send('Internal Server Error');
+    const refreshToken = req.cookies?.refreshToken;
+    if (refreshToken) {
+      await userService.logoutUser(refreshToken);
     }
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict'
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const FetchUserInfo = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    const user = await userService.fetchUser(userId);
+    res.status(200).json({ user });
+  } catch (error) {
+    next(error);
   }
 };
 
 module.exports = {
   Login,
-  Register,
-  UpdateUser,
+  RefreshToken,
+  Logout,
+  FetchUserInfo,
 };

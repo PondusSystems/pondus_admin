@@ -1,20 +1,19 @@
 import { useState } from 'react';
 import './Form.css';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { HideLoading, ShowLoading } from '../../../../redux/loaderSlice';
-// import { TbEye } from "react-icons/tb";
-// import { TbEyeOff } from "react-icons/tb";
+import { TbEye } from "react-icons/tb";
+import { TbEyeOff } from "react-icons/tb";
 import { isValidEmail } from '../../../../utils/validationUtils';
 import userService from '../../../../services/userService';
 
 const Form = () => {
     const [user, setUser] = useState({
         email: "",
-        password: "",
-        rememberMe: false
+        password: ""
     });
     const [error, setError] = useState({
         email: "",
@@ -27,10 +26,9 @@ const Form = () => {
 
     const handleChange = (event) => {
         let name = event.target.name;
-        let type = event.target.type;
         let value = event.target.value;
 
-        setUser({ ...user, [name]: type !== 'checkbox' ? value : event.target.checked });
+        setUser({ ...user, [name]: value });
     };
 
     const togglePasswordView = () => {
@@ -73,14 +71,14 @@ const Form = () => {
         }
         dispatch(ShowLoading());
         try {
-            const response = await userService.loginUser(user, 'staff');
+            const response = await userService.loginUser(user);
             if (response.token) {
-                Cookies.set('pondus-jwt-token', response.token, {
+                Cookies.set('pondus-admin-jwt-token', response.token, {
                     secure: true,
                     sameSite: 'Lax'
                 });
                 const from = location.state?.from.pathname;
-                navigate(from || '/staff');
+                navigate(from);
             }
         } catch (error) {
             message.error(error.response.data?.error);
@@ -90,7 +88,7 @@ const Form = () => {
     };
 
     return (
-        <div className="staff-login-section auth-form">
+        <div className="auth-form">
             <div className='input-form'>
                 <div className='input-section'>
                     <div className='input-container'>
@@ -116,27 +114,14 @@ const Form = () => {
                                 value={user.password}
                                 onChange={handleChange}
                             />
-                            {/* {!showPassword ?
+                            {!showPassword ?
                                 <TbEye size={18} className='eye-icon' onClick={togglePasswordView} />
                                 :
                                 <TbEyeOff size={18} className='eye-icon' onClick={togglePasswordView} />
-                            } */}
+                            }
                         </div>
                         {error.password && <div className='error'>{error.password}</div>}
                     </div>
-                </div>
-                <div className='bottom-row'>
-                    <div className='remember-container'>
-                        <input
-                            type='checkbox'
-                            name='rememberMe'
-                            id='rememberMe'
-                            checked={user.rememberMe}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor='rememberMe'>Remember Me</label>
-                    </div>
-                    <Link to='/staff/forget-password' className='nav-link'>Forgot your password?</Link>
                 </div>
                 <button className='btn' onClick={handleSubmit}>Log In</button>
             </div>
