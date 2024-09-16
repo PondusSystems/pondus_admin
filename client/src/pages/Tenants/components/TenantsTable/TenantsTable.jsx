@@ -3,7 +3,7 @@ import './TenantsTable.css';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { sortArray } from '../../../../utils/sortUtils';
 
-const TenantsTable = ({ data, handleEdit, handleDelete }) => {
+const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess }) => {
     const [sortedData, setSortedData] = useState([]);
     const [sortConfig, setSortConfig] = useState({
         key: '',
@@ -120,7 +120,7 @@ const TenantsTable = ({ data, handleEdit, handleDelete }) => {
                             <div className='btn-container'>
                                 <button className='btn edit-btn' onClick={() => handleEdit(tenant)}>Edit</button>
                                 <button className='btn delete-btn' onClick={() => handleDelete(tenant)}>Delete</button>
-                                <button className={`btn ${tenant.status !== 'enabled' ? 'green-access-btn' : 'red-access-btn' }`} onClick={() => handleDelete(tenant)}>{tenant.status === 'enabled' ? 'Revoke Access' : 'Grant Access'}</button>
+                                <button className={`btn ${tenant.status !== 'enabled' ? 'green-access-btn' : 'red-access-btn' }`} onClick={() => handleUpdateAccess(tenant)}>{tenant.status === 'enabled' ? 'Revoke Access' : 'Grant Access'}</button>
                             </div>
                         </td>
                     </tr>

@@ -178,9 +178,23 @@ const Tenants = () => {
         console.log('Deleting');
         dispatch(ShowLoading());
         try {
-            const response = await userService.deleteUser(tenant._id);
+            const response = await tenantService.deleteTenant(tenant.tenantId);
             message.success(response.message);
-            await fetchMembers();
+            await fetchTenants();
+        } catch (error) {
+            message.error(error.response.data.error);
+        } finally {
+            dispatch(HideLoading());
+        }
+    };
+
+    const handleUpdateAccess = async (tenant) => {
+        dispatch(ShowLoading());
+        const status = tenant.status === 'enabled' ? 'disabled' : 'enabled';
+        try {
+            const response = await tenantService.updateTenantAccess(tenant.tenantId, { status });
+            message.success(response.message);
+            await fetchTenants();
         } catch (error) {
             message.error(error.response.data.error);
         } finally {
@@ -194,17 +208,14 @@ const Tenants = () => {
         try {
             let response;
             if (actionType === "add") {
-                response = await userService.createUser(tenant);
+                response = await tenantService.createTenant(tenant);
             }
             else {
-                if (!payload.password) {
-                    delete payload.password;
-                }
-                response = await userService.updateUser(editTenant._id, tenant);
+                response = await tenantService.updateTenant(editTenant.tenantId, tenant);
             }
             message.success(response.message);
             onRequestClose();
-            await fetchMembers();
+            await fetchTenants();
         } catch (error) {
             message.error(error.response.data.error);
 
@@ -229,7 +240,7 @@ const Tenants = () => {
             </div>
             {(data && data.length > 0) ?
                 <div>
-                    <TenantsTable data={data} handleEdit={handleEdit} handleDelete={handleDelete} />
+                    <TenantsTable data={data} handleEdit={handleEdit} handleDelete={handleDelete} handleUpdateAccess={handleUpdateAccess} />
                     <PaginationHandler count={paginationConfig.count} totalCount={paginationConfig.totalCount} pageIndex={pageIndex} totalPages={paginationConfig.totalPages} handlePageChange={handlePageChange} />
                 </div>
                 :

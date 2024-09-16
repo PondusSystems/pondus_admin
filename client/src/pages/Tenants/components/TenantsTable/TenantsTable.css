@@ -109,9 +109,11 @@
     width: 130px;
     background-color: #E71D36;
     color: white;
+    border-radius: 4px;
 }
 
 .tenants-table tbody .green-access-btn {
     width: 130px;
     background-color: var(--accent-color-1);
+    border-radius: 4px;
 }
