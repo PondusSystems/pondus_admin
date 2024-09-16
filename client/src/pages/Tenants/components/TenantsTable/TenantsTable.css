@@ -1,0 +1,117 @@
+.tenants-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.tenants-table thead th {
+    text-align: left;
+    padding: 5px 20px;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: rgb(234, 234, 234);
+        cursor: pointer;
+    }
+}
+
+.tenants-table thead .head-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.tenants-table thead .head-container .icon {
+    cursor: pointer;
+}
+
+.tenants-table thead .head-container .icon svg {
+    width: 8px;
+    height: 4px;
+}
+
+.tenants-table tbody tr {
+    background-color: white;
+}
+
+.tenants-table tbody td {
+    padding: 15px 20px;
+}
+
+.tenants-table tbody tr td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.tenants-table tbody tr td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
+.tenants-table tbody td .text {
+    font-size: 14px;
+    font-weight: 400;
+    color: #030229;
+}
+
+.tenants-table tbody .label-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tenants-table tbody td .label {
+    padding: 5px 18px 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.tenants-table tbody td .green-label {
+    background-color: var(--accent-color-1);
+}
+
+.tenants-table tbody td .red-label {
+    background-color: #E71D36;
+}
+
+.tenants-table tbody .btn-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tenants-table tbody .btn {
+    width: 80px;
+    height: 27px;
+    font-size: 14px;
+    font-weight: 400;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.tenants-table tbody .edit-btn {
+    background-color: #F7F7F8;
+    color: #121212;
+}
+
+.tenants-table tbody .delete-btn {
+    background-color: #E71D36;
+    color: white;
+    border-radius: 4px;
+}
+
+.tenants-table tbody .red-access-btn {
+    width: 130px;
+    background-color: #E71D36;
+    color: white;
+}
+
+.tenants-table tbody .green-access-btn {
+    width: 130px;
+    background-color: var(--accent-color-1);
+}

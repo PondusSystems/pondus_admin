@@ -10,7 +10,7 @@ const Router = () => {
           key={index}
           path={route.path}
           element={
-            route.protected ? <ProtectedRoute>{route.element}</ProtectedRoute>
+            route.protected ? <ProtectedRoute showSidebar={route.showSidebar}>{route.element}</ProtectedRoute>
               :
               route.element
           }

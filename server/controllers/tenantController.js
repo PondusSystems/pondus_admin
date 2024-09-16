@@ -10,6 +10,18 @@ const GetTenantConfig = async (req, res, next) => {
     }
 };
 
+const SearchTenants = async (req, res, next) => {
+    try {
+        const { pageIndex, limit, searchQuery } = req.query;
+        const parsedPageIndex = parseInt(pageIndex);
+        const parsedLimit = parseInt(limit);
+        const result = await tenantService.searchTenants(parsedPageIndex, parsedLimit, searchQuery);
+        res.status(200).json({ result });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const GetTenantIdByHost = async (req, res, next) => {
     try {
         const { host } = req.params;
@@ -22,5 +34,6 @@ const GetTenantIdByHost = async (req, res, next) => {
 
 module.exports = {
     GetTenantConfig,
+    SearchTenants,
     GetTenantIdByHost
 };

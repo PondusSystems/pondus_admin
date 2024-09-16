@@ -11,9 +11,9 @@ router.get(
 );
 
 router.get(
-  "/get-tenant-id-by-host/:host",
-  validationMiddleware.validateParams(tenantSchemas.hostSchema),
-  controller.GetTenantIdByHost
+  "/search-tenants",
+  validationMiddleware.validateQuery(tenantSchemas.searchTenantsSchema),
+  controller.SearchTenants
 );
 
 module.exports = router;

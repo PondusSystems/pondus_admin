@@ -17,6 +17,37 @@ const getTenantConfig = async (tenantId) => {
   return encryptedConfig;
 };
 
+const searchTenants = async (pageIndex, limit, searchQuery) => {
+  const skip = (pageIndex - 1) * limit;
+  let query = {};
+  if (searchQuery && searchQuery !== '') {
+    query = {
+      $or: [
+        { companyName: { $regex: searchQuery, $options: 'i' } },
+        { 'config.host': { $regex: searchQuery, $options: 'i' } },
+      ]
+    };
+  }
+  const totalCount = await Tenant.countDocuments(query);
+  const totalPages = Math.ceil(totalCount / limit);
+  const tenants = await Tenant.find(query)
+    .sort({ createdAt: -1 })  // Sort by createdAt descending (-1)
+    .skip(skip)
+    .limit(limit);
+
+  if (!tenants || tenants.length <= 0) {
+    const error = new Error('Tenants not found!');
+    error.code = 404;
+    throw error;
+  }
+
+  return {
+    tenants,
+    totalPages,
+    totalCount
+  };
+};
+
 const createTenant = async (tenantData) => {
   const existingTenant = await Tenant.findOne({ tenantId: tenantData.tenantId });
   if (existingTenant) {
@@ -93,6 +124,7 @@ const data = {
 // deleteTenant('example123');
 module.exports = {
   getTenantConfig,
+  searchTenants,
   createTenant,
   updateTenant,
   deleteTenant,
