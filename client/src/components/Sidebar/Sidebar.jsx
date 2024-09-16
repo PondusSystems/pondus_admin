@@ -18,8 +18,6 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const sidebarRef = useRef(null);
     const { user } = useSelector(state => state.user);
-    const { companyInfo } = useSelector(state => state.companyInfo);
-    const items = menuItems[user?.role] || [];
     const location = useLocation();
     const dispatch = useDispatch();
 
@@ -76,15 +74,11 @@ const Sidebar = () => {
                     />
                 </div>
                 <div className="logo">
-                    {user?.role !== 'user' ?
-                        <LogoIcon className="logo-icon" />
-                        :
-                        <img src={companyInfo?.logo} style={{ width: '50px', height: '50px' }} alt='Gym Logo' />
-                    }
-                    <div className="logo-text">{user.role !== 'user' ? "Pondus" : companyInfo?.name}</div>
+                    <LogoIcon className="logo-icon" />
+                    <div className="logo-text">Pondus</div>
                 </div>
                 <div className='menu'>
-                    {items.map((item) => (
+                    {menuItems.map((item) => (
                         <div key={item.path} className={`item ${location.pathname === item.path ? 'active-item' : 'non-active-item'}`}>
                             {item.disabled ?
                                 <>
