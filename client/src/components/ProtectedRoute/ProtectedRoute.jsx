@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
+import './ProtectedRoute.css';
 import { Navigate, useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../../utils/authUtils';
 import { useDispatch, useSelector } from 'react-redux';
+import Sidebar from '../Sidebar/Sidebar.jsx';
 import { fetchUserInfo } from '../../redux/userSlice.js';
 
-const ProtectedRoute = ({ children, ...rest }) => {
+const ProtectedRoute = ({ children, showSidebar, ...rest }) => {
     const location = useLocation();
     const redirectTo = '/login';
     const isAuth = isAuthenticated();
@@ -22,7 +24,10 @@ const ProtectedRoute = ({ children, ...rest }) => {
 
     return isAuth ? (
         <div className='page'>
-            {React.cloneElement(children, { ...rest })}
+            {(showSidebar && user) && <Sidebar />}
+            <div className={`content ${showSidebar ? 'margin-content' : 'full-content'}`}>
+                {React.cloneElement(children, { ...rest })}
+            </div>
         </div>
     ) : (
         <>

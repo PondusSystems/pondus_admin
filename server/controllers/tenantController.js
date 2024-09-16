@@ -10,6 +10,60 @@ const GetTenantConfig = async (req, res, next) => {
     }
 };
 
+const SearchTenants = async (req, res, next) => {
+    try {
+        const { pageIndex, limit, searchQuery } = req.query;
+        const parsedPageIndex = parseInt(pageIndex);
+        const parsedLimit = parseInt(limit);
+        const result = await tenantService.searchTenants(parsedPageIndex, parsedLimit, searchQuery);
+        res.status(200).json({ result });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const CreateTenant = async (req, res, next) => {
+    try {
+        const data = { ...req.body };
+        const tenant = await tenantService.createTenant(data);
+        res.status(201).json({ message: "Tenant created successfully!" });
+    } catch (error) {
+        next(error)
+    }
+};
+
+const UpdateTenant = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        const data = { ...req.body };
+        await tenantService.updateTenant(tenantId, data);
+        res.status(200).json({ message: 'Tenant updated successfully!' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const DeleteTenant = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        await tenantService.deleteTenant(tenantId);
+        res.status(200).json({ message: 'Tenant deleted successfully!' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// const UpdateTenantAccess = async (req, res, next) => {
+//     try {
+//         const { tenantId } = req.params;
+//         const data = { ...req.body };
+//         await tenantService.updateTenant(tenantId, data);
+//         res.status(200).json({ message: 'Tenant info updated successfully!' });
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
 const GetTenantIdByHost = async (req, res, next) => {
     try {
         const { host } = req.params;
@@ -22,5 +76,9 @@ const GetTenantIdByHost = async (req, res, next) => {
 
 module.exports = {
     GetTenantConfig,
+    SearchTenants,
+    CreateTenant,
+    UpdateTenant,
+    DeleteTenant,
     GetTenantIdByHost
 };
