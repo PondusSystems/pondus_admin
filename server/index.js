@@ -27,7 +27,7 @@ connectDB(DB);
 
 //Server status endpoint
 app.get('/', (req, res) => {
-    res.send('Admin test Server is Up!');
+    res.send('Admin Server is Up!');
 });
 
 // Routes
