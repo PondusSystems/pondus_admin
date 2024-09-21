@@ -10,7 +10,7 @@ const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
 const app = express();
 const port = process.env.PORT || 5333;
 const corsOptions = {
-    origin: ['http://localhost:5174', 'http://localhost:5178'],
+    origin: ['https://app.pondus.io', 'https://www.app.pondus.io', 'https://admin.pondus.io', 'https://www.admin.pondus.io'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -27,7 +27,7 @@ connectDB(DB);
 
 //Server status endpoint
 app.get('/', (req, res) => {
-    res.send('Server is Up!');
+    res.send('Admin Server is Up!');
 });
 
 // Routes
