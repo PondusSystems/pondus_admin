@@ -53,22 +53,42 @@ const DeleteTenant = async (req, res, next) => {
     }
 };
 
-// const UpdateTenantAccess = async (req, res, next) => {
-//     try {
-//         const { tenantId } = req.params;
-//         const data = { ...req.body };
-//         await tenantService.updateTenant(tenantId, data);
-//         res.status(200).json({ message: 'Tenant info updated successfully!' });
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
 const GetTenantIdByHost = async (req, res, next) => {
     try {
         const { host } = req.params;
         const tenantId = await tenantService.getTenantIdByHost(host);
         res.status(200).json({ tenantId });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const GetCompanyInfo = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        const companyInfo = await tenantService.getCompanyInfo(tenantId);
+        res.status(200).json({ companyInfo });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const UpdateCompanyInfo = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        const data = { ...req.body };
+        await tenantService.updateCompanyInfo(tenantId, data);
+        res.status(200).json("Info updated successfully!");
+    } catch (error) {
+        next(error);
+    }
+};
+
+const GetAllAdmins = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        const admins = await tenantService.getAllAdmins(tenantId);
+        res.status(200).json({ admins });
     } catch (error) {
         next(error);
     }
@@ -80,5 +100,8 @@ module.exports = {
     CreateTenant,
     UpdateTenant,
     DeleteTenant,
-    GetTenantIdByHost
+    GetTenantIdByHost,
+    GetCompanyInfo,
+    UpdateCompanyInfo,
+    GetAllAdmins
 };

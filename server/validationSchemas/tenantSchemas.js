@@ -48,11 +48,20 @@ const updateTenantAccessSchema = yup.object().shape({
     status: yup.string().trim().required('Status is required')
 });
 
+const updateCompanyInfoSchema = yup.object().shape({
+    name: yup.string().trim().required('Name is required'),
+    address: yup.string().trim().required('Address is required'),
+    city: yup.string().trim().required('City is required'),
+    zip: yup.string().trim().required('Zip is required'),
+    type: yup.string().trim().oneOf(['Studio', 'Traditional Gym', 'Health Club', 'Non-profit', 'Other'], 'Invalid type').required('Type is required'),
+});
+
 module.exports = {
     tenantIdSchema,
     hostSchema,
     searchTenantsSchema,
     createTenantSchema,
     updateTenantSchema,
-    updateTenantAccessSchema
+    updateTenantAccessSchema,
+    updateCompanyInfoSchema
 };

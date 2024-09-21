@@ -118,9 +118,10 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess }) =>
                         </td>
                         <td>
                             <div className='btn-container'>
+                                <button className='btn manage-btn' onClick={() => handleEdit(tenant)}>Manage</button>
                                 <button className='btn edit-btn' onClick={() => handleEdit(tenant)}>Edit</button>
                                 <button className='btn delete-btn' onClick={() => handleDelete(tenant)}>Delete</button>
-                                <button className={`btn ${tenant.status !== 'enabled' ? 'green-access-btn' : 'red-access-btn' }`} onClick={() => handleUpdateAccess(tenant)}>{tenant.status === 'enabled' ? 'Revoke Access' : 'Grant Access'}</button>
+                                <button className={`btn ${tenant.status !== 'enabled' ? 'green-access-btn' : 'red-access-btn'}`} onClick={() => handleUpdateAccess(tenant)}>{tenant.status === 'enabled' ? 'Revoke Access' : 'Grant Access'}</button>
                             </div>
                         </td>
                     </tr>
