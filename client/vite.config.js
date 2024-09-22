@@ -11,6 +11,7 @@ export default defineConfig({
     port: 5178
   },
   build: {
+    outDir: './temp_build',
     rollupOptions: {
       output: {
         manualChunks(id) {
