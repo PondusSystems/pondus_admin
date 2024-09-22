@@ -23,10 +23,8 @@ jobs:
 
       - name: Run tests
         run: |
-          # Placeholder for running tests
           echo "Running tests..."
-          # You can add your actual test command here, for example:
-          # npm test
+          # Add your actual test command here, e.g., npm test
 
   deploy:
     if: github.event_name == 'push'
@@ -45,42 +43,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Fetch changes
-        run: git fetch origin main
+      - name: Pull latest code
+        run: git pull origin main
         working-directory: /var/www/pondus_admin
-
-      - name: Check for client changes
-        id: client_changes
-        run: |
-          git diff --name-only origin/main -- client > changes.txt
-          if [ -s changes.txt ]; then
-            echo "client_changes_detected=true" >> $GITHUB_ENV
-            echo "Detected client changes:"
-            cat changes.txt
-          else
-            echo "client_changes_detected=false" >> $GITHUB_ENV
-            echo "No client changes detected."
-          fi
-
-      - name: Check for server changes
-        id: server_changes
-        run: |
-          git diff --name-only origin/main -- server > changes.txt
-          if [ -s changes.txt ]; then
-            echo "server_changes_detected=true" >> $GITHUB_ENV
-            echo "Detected server changes:"
-            cat changes.txt
-          else
-            echo "server_changes_detected=false" >> $GITHUB_ENV
-            echo "No server changes detected."
-          fi
-
-      - name: Merge changes
-        run: git merge origin/main
-        working-directory: /var/www/pondus_admin
-
+  
       - name: Cache client dependencies
-        if: ${{ env.client_changes_detected == 'true' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -91,17 +58,20 @@ jobs:
             ${{ runner.os }}-node-client-
 
       - name: Install client dependencies
-        if: ${{ env.client_changes_detected == 'true' }}
         run: npm ci
         working-directory: /var/www/pondus_admin/client
 
-      - name: Build client
-        if: ${{ env.client_changes_detected == 'true' }}
+      - name: Build client in temp directory
         run: npm run build
         working-directory: /var/www/pondus_admin/client
 
+      - name: Move built client files from temp to dist
+        run: |
+          rsync -av /var/www/pondus_admin/client/temp_build/ /var/www/pondus_admin/client/dist/
+          rm -rf /var/www/pondus_admin/client/temp_build
+        working-directory: /var/www/pondus_admin/client
+
       - name: Cache server dependencies
-        if: ${{ env.server_changes_detected == 'true' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -112,10 +82,8 @@ jobs:
             ${{ runner.os }}-node-server-
 
       - name: Install server dependencies
-        if: ${{ env.server_changes_detected == 'true' }}
         run: npm ci
         working-directory: /var/www/pondus_admin/server
 
       - name: Restart server
-        if: ${{ env.server_changes_detected == 'true' }}
         run: pm2 restart "Pondus Admin Server"
