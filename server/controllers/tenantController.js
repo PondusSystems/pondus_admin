@@ -53,17 +53,6 @@ const DeleteTenant = async (req, res, next) => {
     }
 };
 
-// const UpdateTenantAccess = async (req, res, next) => {
-//     try {
-//         const { tenantId } = req.params;
-//         const data = { ...req.body };
-//         await tenantService.updateTenant(tenantId, data);
-//         res.status(200).json({ message: 'Tenant info updated successfully!' });
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
 const GetTenantIdByHost = async (req, res, next) => {
     try {
         const { host } = req.params;
