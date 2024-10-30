@@ -36,7 +36,6 @@ app.use((req, res, next) => {
 
     if (!origin || origins.includes(origin)) {
         // Allow the request to proceed
-        console.log('Allowed!')
         next();
     } else {
         // Reject the request

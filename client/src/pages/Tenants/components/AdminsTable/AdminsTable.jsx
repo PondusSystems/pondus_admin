@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import './TenantsTable.css';
+import './AdminsTable.css';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { sortArray } from '../../../../utils/sortUtils';
 
-const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, handleManage }) => {
+const AdminsTable = ({ data, handleDelete }) => {
     const [sortedData, setSortedData] = useState([]);
     const [sortConfig, setSortConfig] = useState({
         key: '',
@@ -39,26 +39,14 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, hand
         });
     };
 
-    const getLabelClassName = (status) => {
-        if (status === 'enabled') {
-            return 'green-label'
-        }
-        else if (status === 'disabled') {
-            return 'red-label'
-        }
-        else {
-            return '';
-        }
-    };
-
     return (
-        <table className='tenants-table'>
+        <table className='admins-table'>
             <thead>
                 <tr>
-                    <th onClick={() => handleSort('companyName')}>
+                    <th onClick={() => handleSort('name')}>
                         <div className='head-container'>
-                            <div className='text'>Company Name</div>
-                            {sortConfig.key === 'companyName' &&
+                            <div className='text'>Name</div>
+                            {sortConfig.key === 'name' &&
                                 <>
                                     {sortConfig.direction === 'desc' ?
                                         < FaCaretDown className='icon' />
@@ -69,10 +57,10 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, hand
                             }
                         </div>
                     </th>
-                    <th onClick={() => handleSort('config.host')}>
+                    <th onClick={() => handleSort('email')}>
                         <div className='head-container'>
-                            <div className='text'>Host</div>
-                            {sortConfig.key === 'config.host' &&
+                            <div className='text'>Email</div>
+                            {sortConfig.key === 'email' &&
                                 <>
                                     {sortConfig.direction === 'desc' ?
                                         < FaCaretDown className='icon' />
@@ -83,10 +71,10 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, hand
                             }
                         </div>
                     </th>
-                    <th onClick={() => handleSort('status')}>
+                    <th onClick={() => handleSort('number')}>
                         <div className='head-container'>
-                            <div className='text'>Status</div>
-                            {sortConfig.key === 'status' &&
+                            <div className='text'>Number</div>
+                            {sortConfig.key === 'number' &&
                                 <>
                                     {sortConfig.direction === 'desc' ?
                                         < FaCaretDown className='icon' />
@@ -103,25 +91,20 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, hand
                 </tr>
             </thead>
             <tbody>
-                {sortedData.map((tenant, index) => (
+                {sortedData.map((admin, index) => (
                     <tr key={index}>
                         <td>
-                            <div className='text'>{tenant.companyName}</div>
+                            <div className='text'>{admin.name}</div>
                         </td>
                         <td>
-                            <div className='text'>{tenant.config.host}</div>
+                            <div className='text'>{admin.email}</div>
                         </td>
                         <td>
-                            <div className='label-container'>
-                                <div className={`text label ${getLabelClassName(tenant.status)}`}>{tenant.status}</div>
-                            </div>
+                            <div className='text'>{admin.number}</div>
                         </td>
                         <td>
                             <div className='btn-container'>
-                                <button className='btn manage-btn' onClick={() => handleManage(tenant)}>Manage</button>
-                                <button className='btn edit-btn' onClick={() => handleEdit(tenant)}>Edit</button>
-                                <button className='btn delete-btn' onClick={() => handleDelete(tenant)}>Delete</button>
-                                <button className={`btn ${tenant.status !== 'enabled' ? 'green-access-btn' : 'red-access-btn'}`} onClick={() => handleUpdateAccess(tenant)}>{tenant.status === 'enabled' ? 'Revoke Access' : 'Grant Access'}</button>
+                                <button className='btn delete-btn' onClick={() => handleDelete(admin)}>Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -131,4 +114,4 @@ const TenantsTable = ({ data, handleEdit, handleDelete, handleUpdateAccess, hand
     )
 };
 
-export default TenantsTable;
+export default AdminsTable;
