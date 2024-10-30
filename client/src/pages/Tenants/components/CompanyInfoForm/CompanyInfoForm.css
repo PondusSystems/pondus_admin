@@ -1,0 +1,101 @@
+.company-info-form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.company-info-form .main-content {
+    display: flex;
+    gap: 20px;
+}
+
+.company-info-form .input-form {
+    width: 100%;
+    background-color: white;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 5px;
+}
+
+.company-info-form .input-form .title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--secondary-color-3);
+}
+
+.company-info-form .input-form .input-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.company-info-form .input-form .input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.company-info-form .input-form .label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--secondary-color-3);
+}
+
+.company-info-form .input-form .input {
+    width: 70%;
+    border: 1px solid var(--secondary-color-3);
+    padding: 6px 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--secondary-color-3);
+    box-sizing: border-box;
+}
+
+.company-info-form .input-form .pass-container .input {
+    width: 100%;
+}
+
+.company-info-form .input-form .pass-container {
+    width: 60%;
+}
+
+.company-info-form .input-form .input-error {
+    border: 1px solid red;
+}
+
+.company-info-form .input-form .error {
+    color: red;
+    font-size: 15px;
+    margin-top: 3px;
+    width: fit-content;
+    align-self: flex-end;
+}
+
+.company-info-form .input-form .eye-icon {
+    position: absolute;
+    transform: translate(-23px, 6px);
+    cursor: pointer;
+}
+
+.company-info-form .input-form .save-btn {
+    width: 120px;
+    height: 40px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--secondary-color-1);
+    border-radius: 5px;
+    background-color: var(--accent-color-1);
+    cursor: pointer;
+    align-self: flex-end;
+    margin-top: 10px;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}

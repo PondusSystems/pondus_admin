@@ -53,4 +53,41 @@ router.get(
   controller.GetTenantIdByHost
 );
 
+router.get(
+  "/get-company-info/:tenantId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
+  controller.GetCompanyInfo
+);
+
+router.put(
+  "/update-company-info/:tenantId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
+  validationMiddleware.validateRequest(tenantSchemas.updateCompanyInfoSchema),
+  controller.UpdateCompanyInfo
+);
+
+router.get(
+  "/get-all-company-admins/:tenantId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
+  controller.GetAllCompanyAdmins
+);
+
+router.post(
+  "/add-company-admin/:tenantId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
+  validationMiddleware.validateRequest(tenantSchemas.addAdminSchema),
+  controller.AddCompanyAdmin
+);
+
+router.delete(
+  "/delete-company-admin/:tenantId/:adminId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.deleteAdminSchema),
+  controller.DeleteCompanyAdmin
+);
+
 module.exports = router;

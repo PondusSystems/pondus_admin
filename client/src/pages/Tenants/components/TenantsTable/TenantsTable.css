@@ -87,11 +87,16 @@
     font-size: 14px;
     font-weight: 400;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
 
     &:hover {
         opacity: 0.7;
     }
+}
+
+.tenants-table tbody .manage-btn {
+    background-color: var(--accent-color-1);
 }
 
 .tenants-table tbody .edit-btn {
@@ -102,18 +107,15 @@
 .tenants-table tbody .delete-btn {
     background-color: #E71D36;
     color: white;
-    border-radius: 4px;
 }
 
 .tenants-table tbody .red-access-btn {
     width: 130px;
     background-color: #E71D36;
     color: white;
-    border-radius: 4px;
 }
 
 .tenants-table tbody .green-access-btn {
     width: 130px;
     background-color: var(--accent-color-1);
-    border-radius: 4px;
 }

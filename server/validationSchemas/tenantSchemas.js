@@ -1,4 +1,7 @@
 const yup = require('yup');
+const mongodb = require('mongodb');
+
+const ObjectId = yup.string().test('is-valid', 'Invalid admin Id', value => mongodb.ObjectId.isValid(value));
 
 const tenantIdSchema = yup.object().shape({
     tenantId: yup.string().trim().required('Tenant Id is required')
@@ -48,11 +51,39 @@ const updateTenantAccessSchema = yup.object().shape({
     status: yup.string().trim().required('Status is required')
 });
 
+const updateCompanyInfoSchema = yup.object().shape({
+    name: yup.string().trim().required('Name is required'),
+    address: yup.string().trim().required('Address is required'),
+    city: yup.string().trim().required('City is required'),
+    zip: yup.string().trim().required('Zip is required'),
+    type: yup.string().trim().oneOf(['Studio', 'Traditional Gym', 'Health Club', 'Non-profit', 'Other'], 'Invalid type').required('Type is required'),
+    logo: yup.string().trim().required('Logo is required')
+});
+
+const addAdminSchema = yup.object().shape({
+    name: yup.string().trim().required('Name is required'),
+    email: yup.string().email('Invalid email address').trim().required('Email is required'),
+    number: yup.string().trim().required('Number is required'),
+    dateOfBirth: yup.string().trim().required('Date of birth is required'),
+    address: yup.string().trim().required('Address is required'),
+    city: yup.string().trim().required('City is required'),
+    zip: yup.string().trim().required('Zip is required'),
+    password: yup.string().trim().required('Password is required')
+});
+
+const deleteAdminSchema = yup.object().shape({
+    tenantId: yup.string().trim().required('Tenant Id is required'),
+    adminId: ObjectId.required('Admin Id is required')
+});
+
 module.exports = {
     tenantIdSchema,
     hostSchema,
     searchTenantsSchema,
     createTenantSchema,
     updateTenantSchema,
-    updateTenantAccessSchema
+    updateTenantAccessSchema,
+    updateCompanyInfoSchema,
+    addAdminSchema,
+    deleteAdminSchema
 };

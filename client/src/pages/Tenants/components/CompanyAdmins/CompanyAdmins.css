@@ -1,0 +1,25 @@
+.company-admins {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.company-admins .main-content {
+    width: 100%;
+    background-color: white;
+    padding: 20px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.company-admins .main-content .title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--secondary-color-3);
+}

@@ -7,101 +7,22 @@ import { ShowLoading, HideLoading } from '../../redux/loaderSlice';
 import TenantsTable from './components/TenantsTable/TenantsTable';
 import PaginationHandler from '../../components/PaginationHandler/PaginationHandler';
 import CustomModal from '../../components/CustomModal/CustomModal';
-import UserForm from '../../components/TenantForm/TenantForm';
+import TenantForm from '../../components/TenantForm/TenantForm';
+import CompanyInfoForm from './components/CompanyInfoForm/CompanyInfoForm';
+import CompanyAdmins from './components/CompanyAdmins/CompanyAdmins';
+import AdminForm from './components/AdminForm/AdminForm';
 import tenantService from '../../services/tenantService';
 
 const Tenants = () => {
-    // const newData = [
-    //     {
-    //         companyName: 'Martha Steward',
-    //         tenantId: 'marthastew@mail.com',
-    //         config: {
-    //             host: "localhost1",
-    //             dbURI: "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/Pondus?retryWrites=true&w=majority",
-    //             stripe: {
-    //                 apiKey: "sk_test_51PhsS1L3hPHcFVDkxw05fkgpVxZjqKMPKxm3ZzfzJmKMWBibxuhaF7yrCT8SxljF7FcFbYOCXoVWOPYydlUMfXNw0011JFxYBU",
-    //                 webhookKey: "whsec_sLPa1EhUAnSjBJfQMPBD9pZ9WaHAn8Mn"
-    //             },
-    //             nodemailer: {
-    //                 service: "Gmail",
-    //                 senderEmail: "test@gmail.com",
-    //                 senderPassword: "geyeifgiiuhepabj"
-    //             }
-    //         }
-    //         ,
-    //         status: 'enabled',
-    //         createdAt: "2024-08-15T12:22:28.109+00:00",
-    //         updatedAt: "2024-09-15T09:16:32.109+00:00",
-    //     },
-    //     {
-    //         companyName: 'Tony Stark',
-    //         tenantId: 'tonystark@mail.com',
-    //         config: {
-    //             host: "localhost2",
-    //             dbURI: "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/Pondus?retryWrites=true&w=majority",
-    //             stripe: {
-    //                 apiKey: "sk_test_51PhsS1L3hPHcFVDkxw05fkgpVxZjqKMPKxm3ZzfzJmKMWBibxuhaF7yrCT8SxljF7FcFbYOCXoVWOPYydlUMfXNw0011JFxYBU",
-    //                 webhookKey: "whsec_sLPa1EhUAnSjBJfQMPBD9pZ9WaHAn8Mn"
-    //             },
-    //             nodemailer: {
-    //                 service: "Gmail",
-    //                 senderEmail: "test@gmail.com",
-    //                 senderPassword: "geyeifgiiuhepabj"
-    //             }
-    //         }
-    //         ,
-    //         status: 'enabled',
-    //         createdAt: "2024-08-15T12:22:28.109+00:00",
-    //         updatedAt: "2024-09-15T09:16:32.109+00:00",
-    //     },
-    //     {
-    //         companyName: 'Steve Rogers',
-    //         tenantId: 'steverogers@mail.com',
-    //         config: {
-    //             host: "localhost",
-    //             dbURI: "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/Pondus?retryWrites=true&w=majority",
-    //             stripe: {
-    //                 apiKey: "sk_test_51PhsS1L3hPHcFVDkxw05fkgpVxZjqKMPKxm3ZzfzJmKMWBibxuhaF7yrCT8SxljF7FcFbYOCXoVWOPYydlUMfXNw0011JFxYBU",
-    //                 webhookKey: "whsec_sLPa1EhUAnSjBJfQMPBD9pZ9WaHAn8Mn"
-    //             },
-    //             nodemailer: {
-    //                 service: "Gmail",
-    //                 senderEmail: "test@gmail.com",
-    //                 senderPassword: "geyeifgiiuhepabj"
-    //             }
-    //         }
-    //         ,
-    //         status: 'disabled',
-    //         createdAt: "2024-08-15T12:22:28.109+00:00",
-    //         updatedAt: "2024-09-15T09:16:32.109+00:00",
-    //     },
-    //     {
-    //         companyName: 'Bruce Banner',
-    //         tenantId: 'brucebanner@mail.com',
-    //         config: {
-    //             host: "localhost4",
-    //             dbURI: "mongodb+srv://shoaibfarooka:Welcome5home.@cluster0.hrpczac.mongodb.net/Pondus?retryWrites=true&w=majority",
-    //             stripe: {
-    //                 apiKey: "sk_test_51PhsS1L3hPHcFVDkxw05fkgpVxZjqKMPKxm3ZzfzJmKMWBibxuhaF7yrCT8SxljF7FcFbYOCXoVWOPYydlUMfXNw0011JFxYBU",
-    //                 webhookKey: "whsec_sLPa1EhUAnSjBJfQMPBD9pZ9WaHAn8Mn"
-    //             },
-    //             nodemailer: {
-    //                 service: "Gmail",
-    //                 senderEmail: "test@gmail.com",
-    //                 senderPassword: "geyeifgiiuhepabj"
-    //             }
-    //         }
-    //         ,
-    //         status: '',
-    //         createdAt: "2024-08-15T12:22:28.109+00:00",
-    //         updatedAt: "2024-09-15T09:16:32.109+00:00",
-    //     }
-    // ];
     const [pageIndex, setPageIndex] = useState(1);
     const [data, setData] = useState([]);
+    const [companyInfo, setCompanyInfo] = useState(null);
+    const [companyAdmins, setCompanyAdmins] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpen2, setIsOpen2] = useState(false);
     const [actionType, setActionType] = useState(null);
     const [editTenant, setEditTenant] = useState(null);
+    const [manageTenant, setManageTenant] = useState(null);
     const [paginationConfig, setPaginationConfig] = useState({
         count: 0,
         totalCount: 0,
@@ -164,6 +85,10 @@ const Tenants = () => {
         setIsOpen(false);
     };
 
+    const onRequestClose2 = () => {
+        setIsOpen2(false);
+    };
+
     const handleEdit = (tenant) => {
         setActionType("edit");
         setEditTenant(tenant);
@@ -218,7 +143,6 @@ const Tenants = () => {
             await fetchTenants();
         } catch (error) {
             message.error(error.response.data.error);
-
         } finally {
             dispatch(HideLoading());
         }
@@ -226,6 +150,69 @@ const Tenants = () => {
 
     const handlePageChange = (page) => {
         setPageIndex(page);
+    };
+
+    const handleManage = async (tenant) => {
+        setManageTenant(tenant);
+        dispatch(ShowLoading());
+        try {
+            const [companyInfoResponse, companyAdminsResponse] = await Promise.all([
+                tenantService.getCompanyInfo(tenant.tenantId),
+                tenantService.getAllCompanyAdmins(tenant.tenantId)
+            ]);
+            setCompanyInfo(companyInfoResponse.companyInfo);
+            setCompanyAdmins(companyAdminsResponse.admins || []);
+            setIsOpen2(true);
+        } catch (error) {
+            console.log('Error: ', error);
+            message.error(error.response.data.error);
+        } finally {
+            dispatch(HideLoading());
+        }
+    };
+
+    const handleUpdateCompanyInfo = async (companyInfo) => {
+        dispatch(ShowLoading());
+        try {
+            const response = await tenantService.updateCompanyInfo(manageTenant.tenantId, companyInfo);
+            message.success(response.message);
+            await handleManage(manageTenant);
+        } catch (error) {
+            message.error(error.response.data.error);
+        } finally {
+            dispatch(HideLoading());
+        }
+    };
+
+    const handleAddCompanyAdmin = async (adminData) => {
+        dispatch(ShowLoading());
+        try {
+            const response = await tenantService.addCompanyAdmin(manageTenant.tenantId, adminData);
+            message.success(response.message);
+            await handleManage(manageTenant);
+        } catch (error) {
+            message.error(error.response.data.error);
+            throw error;
+        } finally {
+            dispatch(HideLoading());
+        }
+    };
+
+    const handleDeleteCompanyAdmin = async (admin) => {
+        const confirm = window.confirm('Are you sure?');
+        if (!confirm) {
+            return;
+        }
+        dispatch(ShowLoading());
+        try {
+            const response = await tenantService.deleteCompanyAdmin(manageTenant.tenantId, admin._id);
+            message.success(response.message);
+            await handleManage(manageTenant);
+        } catch (error) {
+            message.error(error.response.data.error);
+        } finally {
+            dispatch(HideLoading());
+        }
     };
 
     return (
@@ -240,14 +227,19 @@ const Tenants = () => {
             </div>
             {(data && data.length > 0) ?
                 <div>
-                    <TenantsTable data={data} handleEdit={handleEdit} handleDelete={handleDelete} handleUpdateAccess={handleUpdateAccess} />
+                    <TenantsTable data={data} handleEdit={handleEdit} handleDelete={handleDelete} handleUpdateAccess={handleUpdateAccess} handleManage={handleManage} />
                     <PaginationHandler count={paginationConfig.count} totalCount={paginationConfig.totalCount} pageIndex={pageIndex} totalPages={paginationConfig.totalPages} handlePageChange={handlePageChange} />
                 </div>
                 :
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             }
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose} width='70%' contentLabel={"Add/Edit Tenant Form"}>
-                <UserForm tenant={editTenant} actionType={actionType} handleSave={handleSave} />
+                <TenantForm tenant={editTenant} actionType={actionType} handleSave={handleSave} />
+            </CustomModal>
+            <CustomModal isOpen={isOpen2} onRequestClose={onRequestClose2} width='70%' contentLabel={"Manage Tenant Form"}>
+                <CompanyInfoForm companyInfo={companyInfo} handleSave={handleUpdateCompanyInfo} />
+                <CompanyAdmins admins={companyAdmins} handleDelete={handleDeleteCompanyAdmin} />
+                <AdminForm handleSave={handleAddCompanyAdmin} />
             </CustomModal>
         </div>
     )
