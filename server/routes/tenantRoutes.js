@@ -55,24 +55,39 @@ router.get(
 
 router.get(
   "/get-company-info/:tenantId",
-  // authMiddleware.authenticateRequest,
+  authMiddleware.authenticateRequest,
   validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
   controller.GetCompanyInfo
 );
 
-router.patch(
+router.put(
   "/update-company-info/:tenantId",
-  // authMiddleware.authenticateRequest,
+  authMiddleware.authenticateRequest,
   validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
   validationMiddleware.validateRequest(tenantSchemas.updateCompanyInfoSchema),
   controller.UpdateCompanyInfo
 );
 
 router.get(
-  "/get-all-admins/:tenantId",
-  // authMiddleware.authenticateRequest,
+  "/get-all-company-admins/:tenantId",
+  authMiddleware.authenticateRequest,
   validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
-  controller.GetAllAdmins
+  controller.GetAllCompanyAdmins
+);
+
+router.post(
+  "/add-company-admin/:tenantId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.tenantIdSchema),
+  validationMiddleware.validateRequest(tenantSchemas.addAdminSchema),
+  controller.AddCompanyAdmin
+);
+
+router.delete(
+  "/delete-company-admin/:tenantId/:adminId",
+  authMiddleware.authenticateRequest,
+  validationMiddleware.validateParams(tenantSchemas.deleteAdminSchema),
+  controller.DeleteCompanyAdmin
 );
 
 module.exports = router;

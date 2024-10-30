@@ -78,17 +78,38 @@ const UpdateCompanyInfo = async (req, res, next) => {
         const { tenantId } = req.params;
         const data = { ...req.body };
         await tenantService.updateCompanyInfo(tenantId, data);
-        res.status(200).json("Info updated successfully!");
+        res.status(200).json({ message: "Info updated successfully!" });
     } catch (error) {
         next(error);
     }
 };
 
-const GetAllAdmins = async (req, res, next) => {
+const GetAllCompanyAdmins = async (req, res, next) => {
     try {
         const { tenantId } = req.params;
-        const admins = await tenantService.getAllAdmins(tenantId);
+        const admins = await tenantService.getAllCompanyAdmins(tenantId);
         res.status(200).json({ admins });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const AddCompanyAdmin = async (req, res, next) => {
+    try {
+        const { tenantId } = req.params;
+        const data = { ...req.body };
+        const admin = await tenantService.addCompanyAdmin(tenantId, data);
+        res.status(200).json({ message: "Admin created successfully!" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const DeleteCompanyAdmin = async (req, res, next) => {
+    try {
+        const { tenantId, adminId } = req.params;
+        const admin = await tenantService.deleteCompanyAdmin(tenantId, adminId);
+        res.status(200).json({ message: "Admin deleted successfully!" });
     } catch (error) {
         next(error);
     }
@@ -103,5 +124,7 @@ module.exports = {
     GetTenantIdByHost,
     GetCompanyInfo,
     UpdateCompanyInfo,
-    GetAllAdmins
+    GetAllCompanyAdmins,
+    AddCompanyAdmin,
+    DeleteCompanyAdmin
 };

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const Tenant = require('../models/tenantModel');
+const authUtils = require('../utils/authUtils');
 const cryptoUtils = require('../utils/cryptoUtils');
 
 const getTenantConfig = async (tenantId) => {
@@ -112,7 +112,6 @@ const getCompanyInfo = async (tenantId) => {
     throw newError;
   }
   const dbURI = tenant.config.dbURI;
-  console.log('DB URI: ', dbURI);
   let companyInfo;
   let client;
   try {
@@ -133,12 +132,12 @@ const getCompanyInfo = async (tenantId) => {
       await client.close();
     }
   }
-  if (!companyInfo) {
-    const newError = new Error('Company Info not found!');
-    newError.code = 404;
-    throw newError;
-  }
-  return companyInfo;
+  // if (!companyInfo) {
+  //   const newError = new Error('Company Info not found!');
+  //   newError.code = 404;
+  //   throw newError;
+  // }
+  return companyInfo || null;
 };
 
 const updateCompanyInfo = async (tenantId, updatedInfo) => {
@@ -149,7 +148,6 @@ const updateCompanyInfo = async (tenantId, updatedInfo) => {
     throw newError;
   }
   const dbURI = tenant.config.dbURI;
-  console.log('DB URI: ', dbURI);
   let companyInfo;
   let client;
   try {
@@ -164,7 +162,7 @@ const updateCompanyInfo = async (tenantId, updatedInfo) => {
     const documentToUpdate = {
       ...updatedInfo,
       updatedAt: now,
-      createdAt: existingCompanyInfo.createdAt ? existingCompanyInfo.createdAt : now
+      createdAt: existingCompanyInfo?.createdAt ? existingCompanyInfo.createdAt : now
     };
     companyInfo = await collection.findOneAndUpdate({}, { $set: documentToUpdate }, { returnDocument: 'after', upsert: true });
   } catch (error) {
@@ -185,7 +183,7 @@ const updateCompanyInfo = async (tenantId, updatedInfo) => {
   return companyInfo;
 };
 
-const getAllAdmins = async (tenantId) => {
+const getAllCompanyAdmins = async (tenantId) => {
   const tenant = await Tenant.findOne({ tenantId });
   if (!tenant) {
     const newError = new Error('Tenant not found!');
@@ -222,12 +220,108 @@ const getAllAdmins = async (tenantId) => {
       await client.close();
     }
   }
-  if (!admins || admins.length <= 0) {
-    const newError = new Error('Admins not found!');
+  // if (!admins || admins.length <= 0) {
+  //   const newError = new Error('Admins not found!');
+  //   newError.code = 404;
+  //   throw newError;
+  // }
+  return admins || [];
+};
+
+const addCompanyAdmin = async (tenantId, adminData) => {
+  const tenant = await Tenant.findOne({ tenantId });
+  if (!tenant) {
+    const newError = new Error('Tenant not found!');
     newError.code = 404;
     throw newError;
   }
-  return admins;
+  const dbURI = tenant.config.dbURI;
+  let admin;
+  let client;
+  try {
+    client = new MongoClient(dbURI);
+
+    await client.connect();
+
+    const database = client.db();
+    const collection = database.collection('users');
+    const existingUser = await collection.findOne({
+      $or: [
+        { email: adminData.email },
+        { number: adminData.number }
+      ]
+    });
+    if (existingUser) {
+      const newError = new Error('User already exist with this email or number!');
+      newError.code = 409;
+      throw newError;
+    }
+    const passwordDigest = await authUtils.hashPassword(adminData.password);
+    const now = new Date();
+    const updatedAdminData = {
+      ...adminData,
+      password: passwordDigest,
+      role: "admin",
+      updatedAt: now,
+      createdAt: now
+    };
+    admin = await collection.insertOne(updatedAdminData);
+  } catch (error) {
+    console.log('Error: ', error);
+    if (error.message && error.code) {
+      throw error
+    } else {
+      const newError = new Error('Error while creating admin!');
+      newError.code = 500;
+      throw newError;
+    }
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+  if (!admin) {
+    const newError = new Error('Unable to create admin!');
+    newError.code = 400;
+    throw newError;
+  }
+  return admin;
+};
+
+const deleteCompanyAdmin = async (tenantId, adminId) => {
+  const tenant = await Tenant.findOne({ tenantId });
+  if (!tenant) {
+    const newError = new Error('Tenant not found!');
+    newError.code = 404;
+    throw newError;
+  }
+  const dbURI = tenant.config.dbURI;
+  let deletedAdmin;
+  let client;
+  try {
+    client = new MongoClient(dbURI);
+
+    await client.connect();
+
+    const database = client.db();
+    const collection = database.collection('users');
+    deletedAdmin = await collection.findOneAndDelete({ _id: ObjectId.createFromHexString(adminId) });
+  } catch (error) {
+    console.log('Error: ', error);
+    const newError = new Error('Error while deleting admin!');
+    newError.code = 500;
+    throw newError;
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+  if (!deletedAdmin) {
+    const newError = new Error('Admin not found!');
+    newError.code = 404;
+    throw newError;
+  }
+  return deletedAdmin;
 };
 
 module.exports = {
@@ -239,5 +333,7 @@ module.exports = {
   getTenantIdByHost,
   getCompanyInfo,
   updateCompanyInfo,
-  getAllAdmins
+  getAllCompanyAdmins,
+  addCompanyAdmin,
+  deleteCompanyAdmin
 };
