@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './companyInfoForm.css';
+import './CompanyInfoForm.css';
 
 const companyInfoForm = ({ companyInfo, handleSave }) => {
     const [formData, setFormData] = useState({
